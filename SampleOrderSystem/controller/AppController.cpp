@@ -48,6 +48,6 @@ void AppController::handleShipment() {
 }
 
 void AppController::handleProduction() {
-    ProductionView v(production_line_);
+    ProductionView v(production_line_, sample_svc_, order_svc_);
     v.run();
 }
