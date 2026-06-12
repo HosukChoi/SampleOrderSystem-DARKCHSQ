@@ -152,6 +152,7 @@
     <ClInclude Include="domain\Sample.h" />
     <ClInclude Include="interface\IClockProvider.h" />
     <ClInclude Include="interface\IComponent.h" />
+    <ClInclude Include="service\RealClock.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="domain\Order.cpp" />
