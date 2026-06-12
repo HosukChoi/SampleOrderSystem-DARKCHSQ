@@ -2,6 +2,9 @@
 #include "view/MainView.h"
 #include "view/ConsoleUtils.h"
 #include <iostream>
+#include <cstdio>
+#include <chrono>
+#include <ctime>
 
 MainView::MainView(SampleService& sample_svc, OrderService& order_svc,
                    InventoryService& inventory, ProductionLine& production_line,
@@ -10,10 +13,31 @@ MainView::MainView(SampleService& sample_svc, OrderService& order_svc,
       production_line_(production_line), shipment_svc_(shipment_svc) {}
 
 void MainView::printSummary() {
-    std::cout << "등록 시료: " << sample_svc_.getAllSamples().size() << "종  "
-              << "전체 주문: " << order_svc_.getAllOrders().size() << "건";
-    if (production_line_.isProducing()) std::cout << "  [생산 중]";
-    std::cout << "\n";
+    auto now_t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    struct tm tm_buf{};
+#if defined(_WIN32)
+    localtime_s(&tm_buf, &now_t);
+#else
+    localtime_r(&now_t, &tm_buf);
+#endif
+    char time_str[9];
+    strftime(time_str, sizeof(time_str), "%H:%M:%S", &tm_buf);
+
+    int total_stock = 0;
+    for (auto* s : sample_svc_.getAllSamples())
+        total_stock += inventory_.getActualStock(s->getId());
+
+    int queue_size = production_line_.getQueueSize();
+    std::string queue_label = production_line_.isProducing()
+        ? (std::to_string(queue_size) + "건 대기 (생산 중)")
+        : "0건 대기";
+
+    printf("현재 시각: %s\n", time_str);
+    printf("등록 시료: %d종  |  전체 주문: %d건  |  총 재고: %dea  |  생산 큐: %s\n",
+           (int)sample_svc_.getAllSamples().size(),
+           (int)order_svc_.getAllOrders().size(),
+           total_stock,
+           queue_label.c_str());
 }
 
 int MainView::promptMainMenu() {
