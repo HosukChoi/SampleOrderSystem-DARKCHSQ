@@ -157,12 +157,14 @@
     <ClInclude Include="interface\IOrderRepository.h" />
     <ClInclude Include="interface\ISampleRepository.h" />
     <ClInclude Include="service\InventoryService.h" />
+    <ClInclude Include="service\ProductionLine.h" />
     <ClInclude Include="service\SampleService.h" />
     <ClInclude Include="service\RealClock.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="domain\Order.cpp" />
     <ClCompile Include="service\InventoryService.cpp" />
+    <ClCompile Include="service\ProductionLine.cpp" />
     <ClCompile Include="service\SampleService.cpp" />
     <ClCompile Include="repository\JsonOrderRepository.cpp" />
     <ClCompile Include="repository\JsonSampleRepository.cpp" />
