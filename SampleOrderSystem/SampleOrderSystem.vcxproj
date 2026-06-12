@@ -152,12 +152,14 @@
     <ClInclude Include="domain\Sample.h" />
     <ClInclude Include="interface\IClockProvider.h" />
     <ClInclude Include="interface\IComponent.h" />
+    <ClInclude Include="repository\JsonSampleRepository.h" />
     <ClInclude Include="interface\IOrderRepository.h" />
     <ClInclude Include="interface\ISampleRepository.h" />
     <ClInclude Include="service\RealClock.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="domain\Order.cpp" />
+    <ClCompile Include="repository\JsonSampleRepository.cpp" />
     <ClCompile Include="domain\ProductionJob.cpp" />
     <ClCompile Include="domain\Sample.cpp" />
     <ClCompile Include="main.cpp" />
