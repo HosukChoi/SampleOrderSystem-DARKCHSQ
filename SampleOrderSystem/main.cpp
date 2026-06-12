@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#define RUN_APP
+
 #ifdef RUN_APP
 #include "controller/AppController.h"
 #endif
