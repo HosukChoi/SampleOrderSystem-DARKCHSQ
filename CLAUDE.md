@@ -146,6 +146,19 @@ RESERVED → (승인, 재고 충분)  → CONFIRMED → RELEASE
 
 ---
 
+## 참고 POC 레포지토리
+
+개발 시 아래 레포지토리의 구조·패턴을 참고한다.
+
+| 레포 | 참고 목적 |
+|---|---|
+| [ConsoleMVC-DARKCHSQ](https://github.com/HosukChoi/ConsoleMVC-DARKCHSQ) | 콘솔 기반 MVC 구조 패턴 |
+| [DataPersistence-DARKCHSQ](https://github.com/HosukChoi/DataPersistence-DARKCHSQ) | 데이터 영속성 처리 패턴 |
+| [DataMonitor-DARKCHSQ](https://github.com/HosukChoi/DataMonitor-DARKCHSQ) | 실시간 데이터 모니터링 패턴 |
+| [DummyDataGenerator-DARKCHSQ](https://github.com/HosukChoi/DummyDataGenerator-DARKCHSQ) | 더미 데이터 생성 패턴 |
+
+---
+
 ## AI 개발 행동 지침
 
 → [AI_dev_guidelines.md](./AI_dev_guidelines.md)
