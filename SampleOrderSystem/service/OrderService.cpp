@@ -25,7 +25,7 @@ bool OrderService::approveOrder(int order_id) {
     } else {
         order->setStatus(OrderStatus::PRODUCING);
         Sample* sample = sample_repo_.findById(order->getSampleId());
-        int shortfall  = order->getQuantity() - available;
+        int shortfall  = order->getQuantity() - std::max(0, available);
         int actual_qty = static_cast<int>(
             std::ceil(shortfall / (sample->getYield() * 0.9)));
         production_line_.enqueue(order_id, order->getSampleId(),
