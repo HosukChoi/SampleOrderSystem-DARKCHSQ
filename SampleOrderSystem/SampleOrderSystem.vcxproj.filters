@@ -108,6 +108,9 @@
     <ClInclude Include="view\ShipmentView.h">
       <Filter>View</Filter>
     </ClInclude>
+    <ClInclude Include="view\MainView.h">
+      <Filter>View</Filter>
+    </ClInclude>
   </ItemGroup>
 
   <!-- ── Source Files ─────────────────────────────────── -->
@@ -165,6 +168,9 @@
       <Filter>View</Filter>
     </ClCompile>
     <ClCompile Include="view\ShipmentView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="view\MainView.cpp">
       <Filter>View</Filter>
     </ClCompile>
 

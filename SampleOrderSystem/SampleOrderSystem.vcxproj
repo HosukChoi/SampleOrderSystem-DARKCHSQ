@@ -168,6 +168,7 @@
     <ClInclude Include="view\MonitoringView.h" />
     <ClInclude Include="view\ProductionView.h" />
     <ClInclude Include="view\ShipmentView.h" />
+    <ClInclude Include="view\MainView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="domain\Order.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="view\MonitoringView.cpp" />
     <ClCompile Include="view\ProductionView.cpp" />
     <ClCompile Include="view\ShipmentView.cpp" />
+    <ClCompile Include="view\MainView.cpp" />
     <ClCompile Include="service\ProductionLine.cpp" />
     <ClCompile Include="service\SampleService.cpp" />
     <ClCompile Include="repository\JsonOrderRepository.cpp" />
