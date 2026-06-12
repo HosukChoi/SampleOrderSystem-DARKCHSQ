@@ -50,7 +50,7 @@ void JsonOrderRepository::persist() const {
 }
 
 void JsonOrderRepository::save(const Order& order) {
-    store_.emplace(order.getId(), order);
+    store_.insert_or_assign(order.getId(), order);
     persist();
 }
 
