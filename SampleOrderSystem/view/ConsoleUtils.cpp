@@ -42,7 +42,7 @@ void ConsoleUtils::printHeader(const std::string& title) {
 }
 
 void ConsoleUtils::printSeparator() {
-    std::cout << "========================================\n";
+    std::cout << "==================================================================\n";
 }
 
 int ConsoleUtils::readInt(const std::string& prompt) {
