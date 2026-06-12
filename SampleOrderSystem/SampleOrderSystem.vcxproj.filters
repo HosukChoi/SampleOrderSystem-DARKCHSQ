@@ -111,6 +111,9 @@
     <ClInclude Include="view\MainView.h">
       <Filter>View</Filter>
     </ClInclude>
+    <ClInclude Include="controller\AppController.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
   </ItemGroup>
 
   <!-- ── Source Files ─────────────────────────────────── -->
@@ -172,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="view\MainView.cpp">
       <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="controller\AppController.cpp">
+      <Filter>Controller</Filter>
     </ClCompile>
 
     <!-- Test -->
