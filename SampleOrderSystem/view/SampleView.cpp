@@ -64,12 +64,29 @@ void SampleView::listSamples() {
 
 void SampleView::searchSample() {
     ConsoleUtils::printHeader("시료 검색");
-    std::string keyword = ConsoleUtils::readString("검색어: ");
-    auto results = sample_svc_.searchByName(keyword);
+    std::cout << "검색 대상: 1. ID  2. 제품 이름\n";
+    int target = ConsoleUtils::readInt("> ");
+
+    std::vector<Sample*> results;
+    if (target == 1) {
+        int id = ConsoleUtils::readInt("시료 ID: ");
+        Sample* s = sample_svc_.findById(id);
+        if (s) results.push_back(s);
+    } else if (target == 2) {
+        std::string keyword = ConsoleUtils::readString("제품 이름: ");
+        results = sample_svc_.searchByName(keyword);
+    } else {
+        std::cout << "잘못된 선택입니다.\n";
+        ConsoleUtils::pause();
+        return;
+    }
+
     if (results.empty()) std::cout << "검색 결과 없음.\n";
     else
         for (auto* s : results)
-            printf("ID:%-4d 이름:%-16s 수율:%.0f%%\n",
-                   s->getId(), s->getName().c_str(), s->getYield() * 100);
+            printf("ID:%-4d 이름:%s 수율:%.0f%%\n",
+                   s->getId(),
+                   ConsoleUtils::pad(s->getName(), 16).c_str(),
+                   s->getYield() * 100);
     ConsoleUtils::pause();
 }
