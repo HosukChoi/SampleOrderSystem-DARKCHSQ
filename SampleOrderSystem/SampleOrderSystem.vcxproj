@@ -146,10 +146,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="domain\Order.h" />
     <ClInclude Include="domain\OrderStatus.h" />
     <ClInclude Include="domain\Sample.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="domain\Order.cpp" />
     <ClCompile Include="domain\Sample.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="test\SampleTest.cpp" />
