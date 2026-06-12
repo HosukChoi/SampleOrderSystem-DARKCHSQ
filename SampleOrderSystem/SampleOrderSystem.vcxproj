@@ -168,6 +168,7 @@
     <ClCompile Include="domain\Sample.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="test\InventoryServiceTest.cpp" />
+    <ClCompile Include="test\SampleServiceTest.cpp" />
     <ClCompile Include="test\JsonOrderRepositoryTest.cpp" />
     <ClCompile Include="test\JsonSampleRepositoryTest.cpp" />
     <ClCompile Include="test\SampleTest.cpp" />
