@@ -6,11 +6,10 @@
 class OrderView {
 public:
     OrderView(OrderService& order_svc, SampleService& sample_svc);
-    void run();
+    void placeOrder();
+    void processApproval();
 
 private:
     OrderService& order_svc_;
     SampleService& sample_svc_;
-    void placeOrder();
-    void processApproval();
 };

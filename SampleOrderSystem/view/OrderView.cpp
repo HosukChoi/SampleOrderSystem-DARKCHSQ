@@ -7,18 +7,6 @@
 OrderView::OrderView(OrderService& order_svc, SampleService& sample_svc)
     : order_svc_(order_svc), sample_svc_(sample_svc) {}
 
-void OrderView::run() {
-    while (true) {
-        ConsoleUtils::clearScreen();
-        ConsoleUtils::printHeader("주문 관리");
-        std::cout << "1. 주문 접수\n2. 주문 승인/거절\n0. 돌아가기\n";
-        int choice = ConsoleUtils::readInt("> ");
-        if (choice == 0) return;
-        if (choice == 1) placeOrder();
-        else if (choice == 2) processApproval();
-    }
-}
-
 void OrderView::placeOrder() {
     ConsoleUtils::printHeader("주문 접수");
     int sample_id = ConsoleUtils::readInt("시료 ID: ");

@@ -32,8 +32,9 @@ private:
     MainView             main_view_;
 
     void handleSample();
-    void handleOrder();
+    void handlePlaceOrder();
+    void handleApprovalOrder();
     void handleMonitoring();
-    void handleShipment();
     void handleProduction();
+    void handleShipment();
 };

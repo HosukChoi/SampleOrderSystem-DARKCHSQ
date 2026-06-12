@@ -16,11 +16,12 @@ void AppController::run() {
         production_line_.tick();
         int choice = main_view_.promptMainMenu();
         switch (choice) {
-            case 1: handleSample();     break;
-            case 2: handleOrder();      break;
-            case 3: handleMonitoring(); break;
-            case 4: handleShipment();   break;
-            case 5: handleProduction(); break;
+            case 1: handleSample();        break;
+            case 2: handlePlaceOrder();    break;
+            case 3: handleApprovalOrder(); break;
+            case 4: handleMonitoring();    break;
+            case 5: handleProduction();    break;
+            case 6: handleShipment();      break;
             case 0: return;
         }
         production_line_.tick();
@@ -32,9 +33,14 @@ void AppController::handleSample() {
     v.run();
 }
 
-void AppController::handleOrder() {
+void AppController::handlePlaceOrder() {
     OrderView v(order_svc_, sample_svc_);
-    v.run();
+    v.placeOrder();
+}
+
+void AppController::handleApprovalOrder() {
+    OrderView v(order_svc_, sample_svc_);
+    v.processApproval();
 }
 
 void AppController::handleMonitoring() {

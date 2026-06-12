@@ -44,7 +44,7 @@ int MainView::promptMainMenu() {
     ConsoleUtils::clearScreen();
     ConsoleUtils::printHeader("S-Semi 시료 생산주문관리 시스템");
     printSummary();
-    std::cout << "\n1. 시료 관리\n2. 주문 (접수/승인/거절)\n"
-                 "3. 모니터링\n4. 출고 처리\n5. 생산 라인\n0. 종료\n";
+    std::cout << "\n1. 시료 관리\n2. 시료 주문\n3. 주문 승인/거절\n"
+                 "4. 모니터링\n5. 생산라인 조회\n6. 출고 처리\n0. 종료\n";
     return ConsoleUtils::readInt("> ");
 }
