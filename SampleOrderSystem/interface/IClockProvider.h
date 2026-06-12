@@ -6,5 +6,5 @@
 
 interface IClockProvider {
     virtual ~IClockProvider() = default;
-    virtual std::chrono::steady_clock::time_point now() const = 0;
+    virtual std::chrono::system_clock::time_point now() const = 0;
 };

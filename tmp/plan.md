@@ -298,7 +298,7 @@ private:
     int produced_qty_;
     double avg_production_time_;
     IClockProvider& clock_;
-    std::chrono::steady_clock::time_point last_tick_;
+    std::chrono::system_clock::time_point last_tick_;
     double accumulated_time_;
 };
 ```
@@ -384,7 +384,7 @@ interface IComponent {
 
 interface IClockProvider {
     virtual ~IClockProvider() = default;
-    virtual std::chrono::steady_clock::time_point now() const = 0;
+    virtual std::chrono::system_clock::time_point now() const = 0;
 };
 ```
 
@@ -397,8 +397,8 @@ interface IClockProvider {
 
 class RealClock : public IClockProvider {
 public:
-    std::chrono::steady_clock::time_point now() const override {
-        return std::chrono::steady_clock::now();
+    std::chrono::system_clock::time_point now() const override {
+        return std::chrono::system_clock::now();
     }
 };
 ```
@@ -1069,7 +1069,7 @@ namespace fs = std::filesystem;
 using ::testing::Return;
 
 struct MockClock : public IClockProvider {
-    MOCK_METHOD(std::chrono::steady_clock::time_point, now, (), (const, override));
+    MOCK_METHOD(std::chrono::system_clock::time_point, now, (), (const, override));
 };
 
 class OrderServiceTest : public ::testing::Test {
@@ -1087,7 +1087,7 @@ protected:
 
     void SetUp() override {
         EXPECT_CALL(mock_clock, now())
-            .WillRepeatedly(Return(std::chrono::steady_clock::now()));
+            .WillRepeatedly(Return(std::chrono::system_clock::now()));
         sample_repo = new JsonSampleRepository(sample_file);
         order_repo  = new JsonOrderRepository(order_file);
         inv         = new InventoryService(*order_repo, inv_file);
@@ -1349,7 +1349,7 @@ std::vector<Order*> OrderService::getAllOrders() {
 
 namespace fs = std::filesystem;
 using ::testing::Return;
-using TimePoint = std::chrono::steady_clock::time_point;
+using TimePoint = std::chrono::system_clock::time_point;
 
 // 시간 mocking용 MockClock
 struct MockClock : public IClockProvider {
@@ -1358,7 +1358,7 @@ struct MockClock : public IClockProvider {
 
 // 테스트용 시간 헬퍼: base에서 N초 후
 inline TimePoint advanceSec(TimePoint base, double sec) {
-    return base + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
+    return base + std::chrono::duration_cast<std::chrono::system_clock::duration>(
         std::chrono::duration<double>(sec));
 }
 
@@ -1373,7 +1373,7 @@ protected:
     TimePoint            t0;
 
     void SetUp() override {
-        t0         = std::chrono::steady_clock::now();
+        t0         = std::chrono::system_clock::now();
         order_repo = new JsonOrderRepository(order_file);
         inv        = new InventoryService(*order_repo, inv_file);
         prod       = new ProductionLine(*inv, *order_repo, mock_clock);

@@ -24,6 +24,6 @@ private:
     int produced_qty_;
     double avg_production_time_;
     IClockProvider& clock_;
-    std::chrono::steady_clock::time_point last_tick_;
+    std::chrono::system_clock::time_point last_tick_;
     double accumulated_time_;
 };
