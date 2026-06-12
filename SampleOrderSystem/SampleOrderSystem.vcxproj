@@ -164,6 +164,7 @@
     <ClInclude Include="service\RealClock.h" />
     <ClInclude Include="view\ConsoleUtils.h" />
     <ClInclude Include="view\SampleView.h" />
+    <ClInclude Include="view\OrderView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="domain\Order.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="service\ShipmentService.cpp" />
     <ClCompile Include="view\ConsoleUtils.cpp" />
     <ClCompile Include="view\SampleView.cpp" />
+    <ClCompile Include="view\OrderView.cpp" />
     <ClCompile Include="service\ProductionLine.cpp" />
     <ClCompile Include="service\SampleService.cpp" />
     <ClCompile Include="repository\JsonOrderRepository.cpp" />
