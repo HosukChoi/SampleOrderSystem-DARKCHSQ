@@ -78,8 +78,8 @@ void ProductionView::run() {
 #else
         localtime_r(&completion_t, &tm_buf);
 #endif
-        char time_str[9];
-        strftime(time_str, sizeof(time_str), "%H:%M:%S", &tm_buf);
+        char time_str[6];
+        strftime(time_str, sizeof(time_str), "%H:%M", &tm_buf);
 
         char qty_str[12], short_str[12], actual_str[12];
         snprintf(qty_str,    sizeof(qty_str),    "%dea", order_qty);
