@@ -15,15 +15,23 @@ void ShipmentView::run() {
         std::cout << "출고 가능한 주문이 없습니다.\n";
         ConsoleUtils::pause(); return;
     }
-    printf("%-4s %-8s %-16s %-16s %s\n", "No", "주문ID", "고객명", "시료 이름", "수량");
+    using P = ConsoleUtils;
+    printf("%-4s %s %s %s %s\n",
+           "No",
+           P::pad("주문ID", 8).c_str(),
+           P::pad("고객명", 16).c_str(),
+           P::pad("시료 이름", 16).c_str(),
+           "수량");
     ConsoleUtils::printSeparator();
     int no = 1;
     for (auto* o : confirmed) {
         auto* s = sample_svc_.findById(o->getSampleId());
         std::string sample_name = s ? s->getName() : "?";
-        printf("%-4d %-8d %-16s %-16s %dea\n",
-               no++, o->getId(), o->getCustomerName().c_str(),
-               sample_name.c_str(), o->getQuantity());
+        printf("%-4d %-8d %s %s %dea\n",
+               no++, o->getId(),
+               P::pad(o->getCustomerName(), 16).c_str(),
+               P::pad(sample_name, 16).c_str(),
+               o->getQuantity());
     }
     int order_id = ConsoleUtils::readInt("\n출고할 주문 ID (0: 취소): ");
     if (order_id == 0) return;

@@ -34,10 +34,17 @@ void OrderView::processApproval() {
     ConsoleUtils::printHeader("주문 승인/거절");
     auto reserved = order_svc_.getReservedOrders();
     if (reserved.empty()) { std::cout << "접수된 주문이 없습니다.\n"; ConsoleUtils::pause(); return; }
-    printf("%-4s %-16s %-7s %s\n", "ID", "고객명", "시료ID", "수량");
+    using P = ConsoleUtils;
+    printf("%-4s %s %s %s\n",
+           "ID",
+           P::pad("고객명", 16).c_str(),
+           P::pad("시료ID", 7).c_str(),
+           "수량");
     ConsoleUtils::printSeparator();
     for (auto* o : reserved)
-        printf("%-4d %-16s %-7d %dea\n", o->getId(), o->getCustomerName().c_str(),
+        printf("%-4d %s %-7d %dea\n",
+               o->getId(),
+               P::pad(o->getCustomerName(), 16).c_str(),
                o->getSampleId(), o->getQuantity());
     int order_id = ConsoleUtils::readInt("\n주문 ID: ");
     std::cout << "1. 승인  2. 거절  0. 취소\n";

@@ -36,8 +36,15 @@ void ProductionView::run() {
     }
 
     std::cout << "\n";
-    printf("%-4s %-8s %-16s %-8s %-8s %-8s %s\n",
-           "순서", "주문ID", "시료 이름", "주문량", "부족분", "실생산량", "예상완료");
+    using P = ConsoleUtils;
+    printf("%s %s %s %s %s %s %s\n",
+           P::pad("순서",   4).c_str(),
+           P::pad("주문ID", 8).c_str(),
+           P::pad("시료 이름", 16).c_str(),
+           P::pad("주문량", 8).c_str(),
+           P::pad("부족분", 8).c_str(),
+           P::pad("실생산량", 8).c_str(),
+           "예상완료");
     ConsoleUtils::printSeparator();
 
     auto now = std::chrono::system_clock::now();
@@ -79,8 +86,9 @@ void ProductionView::run() {
         snprintf(short_str,  sizeof(short_str),  "%dea", job.getShortfall());
         snprintf(actual_str, sizeof(actual_str), "%dea", job.getActualQty());
 
-        printf("%-4d %-8d %-16s %-8s %-8s %-8s %s\n",
-               seq++, job.getOrderId(), sample_name.c_str(),
+        printf("%-4d %-8d %s %-8s %-8s %-8s %s\n",
+               seq++, job.getOrderId(),
+               ConsoleUtils::pad(sample_name, 16).c_str(),
                qty_str, short_str, actual_str, time_str);
 
         q.pop();

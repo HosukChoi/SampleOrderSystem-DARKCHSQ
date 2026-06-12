@@ -39,14 +39,22 @@ void SampleView::listSamples() {
     auto samples = sample_svc_.getAllSamples();
     if (samples.empty()) { std::cout << "등록된 시료가 없습니다.\n"; }
     else {
-        printf("%-4s %-16s %-12s %-8s %-10s %s\n", "ID", "이름", "평균생산시간", "수율", "현재 재고", "상태");
+        using P = ConsoleUtils;
+        printf("%-4s %s %s %s %s %s\n",
+               "ID",
+               P::pad("이름", 16).c_str(),
+               P::pad("평균생산시간", 12).c_str(),
+               P::pad("수율", 8).c_str(),
+               P::pad("현재 재고", 10).c_str(),
+               "상태");
         ConsoleUtils::printSeparator();
         for (auto* s : samples) {
             char yield_str[16], stock_str[16];
             snprintf(yield_str, sizeof(yield_str), "%.0f%%", s->getYield() * 100);
             snprintf(stock_str, sizeof(stock_str), "%dea", inventory_.getActualStock(s->getId()));
-            printf("%-4d %-16s %-12.1f %-8s %-10s %s\n",
-                   s->getId(), s->getName().c_str(),
+            printf("%-4d %s %-12.1f %-8s %-10s %s\n",
+                   s->getId(),
+                   P::pad(s->getName(), 16).c_str(),
                    s->getAvgProductionTime(), yield_str,
                    stock_str, inventory_.getStockStatus(s->getId()));
         }
