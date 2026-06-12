@@ -1736,19 +1736,13 @@ std::vector<Order*> ShipmentService::getConfirmedOrders() {
 
 ---
 
-## Task 10: View 레이어 — ConsoleUtils + 전체 View
+## Task 10: View 레이어 — ConsoleUtils (공통 유틸리티)
 
-> DataMonitor POC 반영: MonitoringView는 in-memory 상태를 tick 기반으로 읽어 출력한다.  
-> View는 stdin/stdout에 의존하므로 단위 테스트 대상 아님. 통합 시나리오로 수동 검증.
+> View는 stdin/stdout에 의존하므로 단위 테스트 대상 아님. 빌드 통과로 검증.
 
 **Files:**
-- Create: `SampleOrderSystem/view/ConsoleUtils.h / .cpp`
-- Create: `SampleOrderSystem/view/MainView.h / .cpp`
-- Create: `SampleOrderSystem/view/SampleView.h / .cpp`
-- Create: `SampleOrderSystem/view/OrderView.h / .cpp`
-- Create: `SampleOrderSystem/view/MonitoringView.h / .cpp`
-- Create: `SampleOrderSystem/view/ProductionView.h / .cpp`
-- Create: `SampleOrderSystem/view/ShipmentView.h / .cpp`
+- Create: `SampleOrderSystem/view/ConsoleUtils.h`
+- Create: `SampleOrderSystem/view/ConsoleUtils.cpp`
 
 - [ ] `view/ConsoleUtils.h` 생성 후 vcxproj에 추가
 
@@ -1811,6 +1805,22 @@ void ConsoleUtils::pause() {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 ```
+
+- [ ] 빌드 확인 (전체 테스트 PASSED)
+
+- [ ] 커밋
+
+```
+[feat](view): ConsoleUtils - 콘솔 공통 유틸리티 구현
+```
+
+---
+
+## Task 11: View 레이어 — SampleView (시료 관리 화면)
+
+**Files:**
+- Create: `SampleOrderSystem/view/SampleView.h`
+- Create: `SampleOrderSystem/view/SampleView.cpp`
 
 - [ ] `view/SampleView.h / .cpp` 생성 후 vcxproj에 추가
 
@@ -1901,6 +1911,22 @@ void SampleView::searchSample() {
 }
 ```
 
+- [ ] 빌드 확인 (전체 테스트 PASSED)
+
+- [ ] 커밋
+
+```
+[feat](view): SampleView - 시료 등록/조회/검색 화면 구현
+```
+
+---
+
+## Task 12: View 레이어 — OrderView (주문 접수/승인/거절 화면)
+
+**Files:**
+- Create: `SampleOrderSystem/view/OrderView.h`
+- Create: `SampleOrderSystem/view/OrderView.cpp`
+
 - [ ] `view/OrderView.h / .cpp` 생성 후 vcxproj에 추가
 
 ```cpp
@@ -1975,6 +2001,24 @@ void OrderView::processApproval() {
 }
 ```
 
+- [ ] 빌드 확인 (전체 테스트 PASSED)
+
+- [ ] 커밋
+
+```
+[feat](view): OrderView - 주문 접수/승인/거절 화면 구현
+```
+
+---
+
+## Task 13: View 레이어 — MonitoringView (모니터링 화면)
+
+> DataMonitor POC 반영: in-memory 상태를 tick 기반으로 읽어 출력.
+
+**Files:**
+- Create: `SampleOrderSystem/view/MonitoringView.h`
+- Create: `SampleOrderSystem/view/MonitoringView.cpp`
+
 - [ ] `view/MonitoringView.h / .cpp` 생성 후 vcxproj에 추가
 
 ```cpp
@@ -1985,12 +2029,11 @@ void OrderView::processApproval() {
 #include "service/InventoryService.h"
 #include "service/ProductionLine.h"
 
-// DataMonitor POC 반영: in-memory 상태를 tick 기반으로 읽어 출력
 class MonitoringView {
 public:
     MonitoringView(OrderService& order_svc, SampleService& sample_svc,
                    InventoryService& inventory, ProductionLine& production_line);
-    void render();  // tick 후 현재 상태를 즉시 출력
+    void render();
 
 private:
     OrderService& order_svc_;
@@ -2013,7 +2056,7 @@ MonitoringView::MonitoringView(OrderService& order_svc, SampleService& sample_sv
       inventory_(inventory), production_line_(production_line) {}
 
 void MonitoringView::render() {
-    production_line_.tick();   // 최신 생산 상태 반영
+    production_line_.tick();
     ConsoleUtils::clearScreen();
     ConsoleUtils::printHeader("모니터링");
     auto all = order_svc_.getAllOrders();
@@ -2028,7 +2071,6 @@ void MonitoringView::render() {
     printf("  RESERVED:%d  PRODUCING:%d  CONFIRMED:%d  RELEASE:%d\n\n",
            cnt[0], cnt[1], cnt[2], cnt[3]);
 
-    // 생산 중인 작업 표시
     if (production_line_.isProducing()) {
         auto* job = production_line_.getCurrentJob();
         std::cout << "[현재 생산 중]\n";
@@ -2051,6 +2093,22 @@ void MonitoringView::render() {
     ConsoleUtils::pause();
 }
 ```
+
+- [ ] 빌드 확인 (전체 테스트 PASSED)
+
+- [ ] 커밋
+
+```
+[feat](view): MonitoringView - 주문/재고/생산 현황 모니터링 화면 구현
+```
+
+---
+
+## Task 14: View 레이어 — ProductionView (생산 라인 화면)
+
+**Files:**
+- Create: `SampleOrderSystem/view/ProductionView.h`
+- Create: `SampleOrderSystem/view/ProductionView.cpp`
 
 - [ ] `view/ProductionView.h / .cpp` 생성 후 vcxproj에 추가
 
@@ -2104,6 +2162,22 @@ void ProductionView::run() {
 }
 ```
 
+- [ ] 빌드 확인 (전체 테스트 PASSED)
+
+- [ ] 커밋
+
+```
+[feat](view): ProductionView - 생산 라인 현황 및 대기 큐 화면 구현
+```
+
+---
+
+## Task 15: View 레이어 — ShipmentView (출고 처리 화면)
+
+**Files:**
+- Create: `SampleOrderSystem/view/ShipmentView.h`
+- Create: `SampleOrderSystem/view/ShipmentView.cpp`
+
 - [ ] `view/ShipmentView.h / .cpp` 생성 후 vcxproj에 추가
 
 ```cpp
@@ -2153,6 +2227,22 @@ void ShipmentView::run() {
 }
 ```
 
+- [ ] 빌드 확인 (전체 테스트 PASSED)
+
+- [ ] 커밋
+
+```
+[feat](view): ShipmentView - 출고 처리 화면 구현
+```
+
+---
+
+## Task 16: View 레이어 — MainView (메인 메뉴 화면)
+
+**Files:**
+- Create: `SampleOrderSystem/view/MainView.h`
+- Create: `SampleOrderSystem/view/MainView.cpp`
+
 - [ ] `view/MainView.h / .cpp` 생성 후 vcxproj에 추가
 
 ```cpp
@@ -2169,7 +2259,7 @@ public:
     MainView(SampleService& sample_svc, OrderService& order_svc,
              InventoryService& inventory, ProductionLine& production_line,
              ShipmentService& shipment_svc);
-    int promptMainMenu();   // 메뉴 출력 후 선택지 반환
+    int promptMainMenu();
     void printSummary();
 
 private:
@@ -2215,17 +2305,18 @@ int MainView::promptMainMenu() {
 - [ ] 커밋
 
 ```
-[feat](view): View 레이어 구현 (ConsoleUtils, MainView, SampleView, OrderView, MonitoringView, ProductionView, ShipmentView)
+[feat](view): MainView - 메인 메뉴 및 시스템 요약 화면 구현
 ```
 
 ---
 
-## Task 11: AppController + main.cpp 완성
+## Task 17: AppController + main.cpp 완성
 
 > ConsoleMVC POC 반영: AppController가 모든 services + MainView를 멤버로 소유하며 `run()`에서 tick + 렌더링 + 사용자 입력 → 서비스 호출 루프를 구동한다.
 
 **Files:**
-- Create: `SampleOrderSystem/controller/AppController.h / .cpp`
+- Create: `SampleOrderSystem/controller/AppController.h`
+- Create: `SampleOrderSystem/controller/AppController.cpp`
 - Modify: `SampleOrderSystem/main.cpp`
 
 - [ ] `controller/AppController.h` 생성 후 vcxproj에 추가
@@ -2254,21 +2345,14 @@ public:
     void run();
 
 private:
-    // repositories (소유)
     JsonSampleRepository sample_repo_;
     JsonOrderRepository  order_repo_;
-
-    // clock
     RealClock clock_;
-
-    // services (소유)
     InventoryService inventory_;
     SampleService    sample_svc_;
     ProductionLine   production_line_;
     OrderService     order_svc_;
     ShipmentService  shipment_svc_;
-
-    // view (소유)
     MainView main_view_;
 
     void handleSample();
@@ -2312,7 +2396,7 @@ void AppController::run() {
             case 5: handleProduction(); break;
             case 0: return;
         }
-        production_line_.tick();   // 메뉴 처리 후 생산 진행
+        production_line_.tick();
     }
 }
 
