@@ -4,8 +4,8 @@
 #include <iostream>
 #include <cstdio>
 
-ShipmentView::ShipmentView(ShipmentService& shipment_svc)
-    : shipment_svc_(shipment_svc) {}
+ShipmentView::ShipmentView(ShipmentService& shipment_svc, SampleService& sample_svc)
+    : shipment_svc_(shipment_svc), sample_svc_(sample_svc) {}
 
 void ShipmentView::run() {
     ConsoleUtils::clearScreen();
@@ -15,11 +15,16 @@ void ShipmentView::run() {
         std::cout << "출고 가능한 주문이 없습니다.\n";
         ConsoleUtils::pause(); return;
     }
-    printf("%-4s %-16s %-7s %s\n", "ID", "고객명", "시료ID", "수량");
+    printf("%-4s %-8s %-16s %-16s %s\n", "No", "주문ID", "고객명", "시료 이름", "수량");
     ConsoleUtils::printSeparator();
-    for (auto* o : confirmed)
-        printf("%-4d %-16s %-7d %d\n", o->getId(), o->getCustomerName().c_str(),
-               o->getSampleId(), o->getQuantity());
+    int no = 1;
+    for (auto* o : confirmed) {
+        auto* s = sample_svc_.findById(o->getSampleId());
+        std::string sample_name = s ? s->getName() : "?";
+        printf("%-4d %-8d %-16s %-16s %d\n",
+               no++, o->getId(), o->getCustomerName().c_str(),
+               sample_name.c_str(), o->getQuantity());
+    }
     int order_id = ConsoleUtils::readInt("\n출고할 주문 ID (0: 취소): ");
     if (order_id == 0) return;
     shipment_svc_.release(order_id)

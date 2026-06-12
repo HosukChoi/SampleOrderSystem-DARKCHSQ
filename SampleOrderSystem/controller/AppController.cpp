@@ -43,7 +43,7 @@ void AppController::handleMonitoring() {
 }
 
 void AppController::handleShipment() {
-    ShipmentView v(shipment_svc_);
+    ShipmentView v(shipment_svc_, sample_svc_);
     v.run();
 }
 
