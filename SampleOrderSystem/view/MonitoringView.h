@@ -12,6 +12,8 @@ public:
     void render();
 
 private:
+    void showOrderStatus();
+    void showInventoryStatus();
     OrderService& order_svc_;
     SampleService& sample_svc_;
     InventoryService& inventory_;
