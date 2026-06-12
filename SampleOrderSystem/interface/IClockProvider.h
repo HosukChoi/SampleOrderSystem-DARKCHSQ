@@ -2,7 +2,9 @@
 #pragma once
 #include <chrono>
 
+#ifndef interface
 #define interface struct
+#endif
 
 interface IClockProvider {
     virtual ~IClockProvider() = default;

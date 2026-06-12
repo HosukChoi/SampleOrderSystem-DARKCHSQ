@@ -151,6 +151,7 @@
     <ClInclude Include="domain\ProductionJob.h" />
     <ClInclude Include="domain\Sample.h" />
     <ClInclude Include="interface\IClockProvider.h" />
+    <ClInclude Include="interface\IComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="domain\Order.cpp" />
