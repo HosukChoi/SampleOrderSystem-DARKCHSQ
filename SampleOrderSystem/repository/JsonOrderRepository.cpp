@@ -37,7 +37,8 @@ void JsonOrderRepository::load() {
 }
 
 void JsonOrderRepository::persist() const {
-    fs::create_directories(fs::path(file_path_).parent_path());
+    auto parent = fs::path(file_path_).parent_path();
+    if (!parent.empty()) fs::create_directories(parent);
     json j = json::array();
     for (auto& [id, o] : store_)
         j.push_back({{"id",            o.getId()},
