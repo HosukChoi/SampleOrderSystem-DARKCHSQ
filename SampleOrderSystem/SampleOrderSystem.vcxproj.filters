@@ -1,20 +1,203 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Model">
+      <UniqueIdentifier>{A1B2C3D4-0001-0000-0000-000000000001}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Model\Domain">
+      <UniqueIdentifier>{A1B2C3D4-0001-0000-0000-000000000002}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Model\Interface">
+      <UniqueIdentifier>{A1B2C3D4-0001-0000-0000-000000000003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Repository">
+      <UniqueIdentifier>{A1B2C3D4-0001-0000-0000-000000000004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Service">
+      <UniqueIdentifier>{A1B2C3D4-0001-0000-0000-000000000005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{A1B2C3D4-0001-0000-0000-000000000006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{A1B2C3D4-0001-0000-0000-000000000007}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Test">
+      <UniqueIdentifier>{A1B2C3D4-0001-0000-0000-000000000008}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+
+  <!-- ── Header Files ─────────────────────────────────── -->
+  <ItemGroup>
+    <!-- Model\Domain -->
+    <ClInclude Include="domain\OrderStatus.h">
+      <Filter>Model\Domain</Filter>
+    </ClInclude>
+    <ClInclude Include="domain\Sample.h">
+      <Filter>Model\Domain</Filter>
+    </ClInclude>
+    <ClInclude Include="domain\Order.h">
+      <Filter>Model\Domain</Filter>
+    </ClInclude>
+    <ClInclude Include="domain\ProductionJob.h">
+      <Filter>Model\Domain</Filter>
+    </ClInclude>
+
+    <!-- Model\Interface -->
+    <ClInclude Include="interface\IComponent.h">
+      <Filter>Model\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\IClockProvider.h">
+      <Filter>Model\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\ISampleRepository.h">
+      <Filter>Model\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\IOrderRepository.h">
+      <Filter>Model\Interface</Filter>
+    </ClInclude>
+
+    <!-- Model\Repository -->
+    <ClInclude Include="repository\JsonSampleRepository.h">
+      <Filter>Model\Repository</Filter>
+    </ClInclude>
+    <ClInclude Include="repository\JsonOrderRepository.h">
+      <Filter>Model\Repository</Filter>
+    </ClInclude>
+
+    <!-- Service -->
+    <ClInclude Include="service\RealClock.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="service\InventoryService.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="service\SampleService.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="service\OrderService.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="service\ProductionLine.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+    <ClInclude Include="service\ShipmentService.h">
+      <Filter>Service</Filter>
+    </ClInclude>
+
+    <!-- View -->
+    <ClInclude Include="view\ConsoleUtils.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="view\SampleView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="view\OrderView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="view\MonitoringView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="view\ProductionView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="view\ShipmentView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+  </ItemGroup>
+
+  <!-- ── Source Files ─────────────────────────────────── -->
+  <ItemGroup>
+    <!-- Model\Domain -->
+    <ClCompile Include="domain\Sample.cpp">
+      <Filter>Model\Domain</Filter>
+    </ClCompile>
+    <ClCompile Include="domain\Order.cpp">
+      <Filter>Model\Domain</Filter>
+    </ClCompile>
+    <ClCompile Include="domain\ProductionJob.cpp">
+      <Filter>Model\Domain</Filter>
+    </ClCompile>
+
+    <!-- Model\Repository -->
+    <ClCompile Include="repository\JsonSampleRepository.cpp">
+      <Filter>Model\Repository</Filter>
+    </ClCompile>
+    <ClCompile Include="repository\JsonOrderRepository.cpp">
+      <Filter>Model\Repository</Filter>
+    </ClCompile>
+
+    <!-- Service -->
+    <ClCompile Include="service\InventoryService.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include="service\SampleService.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include="service\OrderService.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include="service\ProductionLine.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+    <ClCompile Include="service\ShipmentService.cpp">
+      <Filter>Service</Filter>
+    </ClCompile>
+
+    <!-- View -->
+    <ClCompile Include="view\ConsoleUtils.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="view\SampleView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="view\OrderView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="view\MonitoringView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="view\ProductionView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="view\ShipmentView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+
+    <!-- Test -->
+    <ClCompile Include="test\SampleTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\OrderTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\JsonSampleRepositoryTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\JsonOrderRepositoryTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\InventoryServiceTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\SampleServiceTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\OrderServiceTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\ProductionLineTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\ShipmentServiceTest.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
+
+    <!-- Root -->
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
 </Project>
