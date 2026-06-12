@@ -60,3 +60,27 @@ TEST_F(JsonSampleRepositoryTest, PersistAndReloadRoundTrip) {
     EXPECT_EQ(repo->findById(1)->getName(), "AlphaSi");
     EXPECT_EQ(repo->findById(2)->getName(), "BetaSi");
 }
+
+TEST_F(JsonSampleRepositoryTest, SaveIgnoresDuplicateId) {
+    repo->save(Sample(1, "AlphaSi",    3.0, 0.9));
+    repo->save(Sample(1, "AlphaSi_v2", 2.0, 0.8));
+    EXPECT_EQ(repo->findAll().size(), 1u);
+    EXPECT_EQ(repo->findById(1)->getName(), "AlphaSi");  // 최초 저장값 유지
+}
+
+TEST_F(JsonSampleRepositoryTest, FindByNameNoMatch) {
+    repo->save(Sample(1, "AlphaSi", 3.0, 0.9));
+    EXPECT_TRUE(repo->findByName("ZZ_NoMatch").empty());
+}
+
+TEST_F(JsonSampleRepositoryTest, PersistIntegrity_AllFields) {
+    repo->save(Sample(5, "GammaSi", 7.5, 0.75));
+    delete repo;
+    repo = new JsonSampleRepository(file);
+    Sample* s = repo->findById(5);
+    ASSERT_NE(s, nullptr);
+    EXPECT_EQ(s->getId(), 5);
+    EXPECT_EQ(s->getName(), "GammaSi");
+    EXPECT_DOUBLE_EQ(s->getAvgProductionTime(), 7.5);
+    EXPECT_DOUBLE_EQ(s->getYield(), 0.75);
+}

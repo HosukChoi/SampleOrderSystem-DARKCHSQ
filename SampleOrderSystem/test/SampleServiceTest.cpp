@@ -56,3 +56,30 @@ TEST_F(SampleServiceTest, SearchByNameFindsMatch) {
     ASSERT_EQ(results.size(), 1u);
     EXPECT_EQ(results[0]->getId(), 1);
 }
+
+TEST_F(SampleServiceTest, SearchByNameNoMatch) {
+    svc->registerSample(1, "AlphaSi", 3.0, 0.9);
+    EXPECT_TRUE(svc->searchByName("ZZ_NoMatch").empty());
+}
+
+TEST_F(SampleServiceTest, SearchByNameMultipleMatches) {
+    svc->registerSample(1, "AlphaSi", 3.0, 0.9);
+    svc->registerSample(2, "AlphaSi2", 2.0, 0.8);
+    svc->registerSample(3, "BetaSi",   1.0, 0.7);
+    auto results = svc->searchByName("Alpha");
+    EXPECT_EQ(results.size(), 2u);
+}
+
+TEST_F(SampleServiceTest, GetAllSamplesWhenEmpty) {
+    EXPECT_TRUE(svc->getAllSamples().empty());
+}
+
+TEST_F(SampleServiceTest, RegisterSampleReturnedDataIntact) {
+    svc->registerSample(7, "GammaSi", 5.5, 0.85);
+    auto* s = svc->findById(7);
+    ASSERT_NE(s, nullptr);
+    EXPECT_EQ(s->getId(), 7);
+    EXPECT_EQ(s->getName(), "GammaSi");
+    EXPECT_DOUBLE_EQ(s->getAvgProductionTime(), 5.5);
+    EXPECT_DOUBLE_EQ(s->getYield(), 0.85);
+}

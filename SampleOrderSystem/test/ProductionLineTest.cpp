@@ -125,3 +125,48 @@ TEST_F(ProductionLineTest, NextJobStartsAfterCurrentCompletes) {
     EXPECT_EQ(order_repo->findById(1)->getStatus(), OrderStatus::CONFIRMED);
     EXPECT_EQ(order_repo->findById(2)->getStatus(), OrderStatus::CONFIRMED);
 }
+
+TEST_F(ProductionLineTest, TickOnEmptyQueue_NoOp) {
+    EXPECT_FALSE(prod->isProducing());
+    prod->tick();
+    EXPECT_FALSE(prod->isProducing());
+    EXPECT_EQ(inv->getActualStock(1), 0);
+}
+
+TEST_F(ProductionLineTest, TickBeforeTimeElapsed_NoInventoryUpdate) {
+    EXPECT_CALL(mock_clock, now())
+        .WillOnce(Return(t0))
+        .WillOnce(Return(advanceSec(t0, 0.5)));  // < avg_production_time=1.0
+
+    prod->enqueue(1, 1, 2, 1.0);
+    prod->tick();
+    EXPECT_EQ(inv->getActualStock(1), 0);
+    EXPECT_TRUE(prod->isProducing());
+}
+
+TEST_F(ProductionLineTest, MultipleJobsQueueOrder_FIFO) {
+    EXPECT_CALL(mock_clock, now()).WillRepeatedly(Return(t0));
+    prod->enqueue(10, 1, 2, 1.0);
+    prod->enqueue(20, 1, 3, 1.0);
+    prod->enqueue(30, 1, 1, 1.0);
+
+    EXPECT_EQ(prod->getCurrentJob()->getOrderId(), 10);
+    EXPECT_EQ(prod->getQueueSize(), 2);
+    auto q = prod->getWaitingQueue();
+    EXPECT_EQ(q.front().getOrderId(), 20); q.pop();
+    EXPECT_EQ(q.front().getOrderId(), 30);
+}
+
+TEST_F(ProductionLineTest, ShortfallPersistedInQueue) {
+    const std::string queue_file = "test_pl_shortfall_tmp.json";
+    EXPECT_CALL(mock_clock, now()).WillRepeatedly(Return(t0));
+    {
+        ProductionLine pl(*inv, *order_repo, mock_clock, queue_file);
+        pl.enqueue(1, 1, 5, 1.0, 3);  // shortfall=3, actual_qty=5
+    }
+    ProductionLine pl2(*inv, *order_repo, mock_clock, queue_file);
+    ASSERT_NE(pl2.getCurrentJob(), nullptr);
+    EXPECT_EQ(pl2.getCurrentJob()->getShortfall(), 3);
+    EXPECT_EQ(pl2.getCurrentJob()->getActualQty(), 5);
+    fs::remove(queue_file);
+}

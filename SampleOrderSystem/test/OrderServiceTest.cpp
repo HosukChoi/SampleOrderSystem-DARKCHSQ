@@ -97,3 +97,53 @@ TEST_F(OrderServiceTest, AvailableStockConsideredOnApproval) {
     svc->approveOrder(o->getId());
     EXPECT_EQ(o->getStatus(), OrderStatus::PRODUCING);
 }
+
+TEST_F(OrderServiceTest, ApproveOrder_ExactStockMatch) {
+    // available == quantity → CONFIRMED
+    inv->addActualStock(1, 5);
+    auto* o = svc->placeOrder(1, "Lab-A", 5);
+    EXPECT_TRUE(svc->approveOrder(o->getId()));
+    EXPECT_EQ(o->getStatus(), OrderStatus::CONFIRMED);
+}
+
+TEST_F(OrderServiceTest, ApproveOrder_ShortfallCalculation) {
+    // AlphaSi: yield=0.9, actual=3, order=5
+    // available=3, shortfall=5-3=2, actual_qty=ceil(2/(0.9*0.9))=ceil(2.469)=3
+    inv->addActualStock(1, 3);
+    auto* o = svc->placeOrder(1, "Lab-A", 5);
+    EXPECT_TRUE(svc->approveOrder(o->getId()));
+    EXPECT_EQ(o->getStatus(), OrderStatus::PRODUCING);
+    ASSERT_NE(prod_line->getCurrentJob(), nullptr);
+    EXPECT_EQ(prod_line->getCurrentJob()->getActualQty(), 3);
+}
+
+TEST_F(OrderServiceTest, RejectNonReservedOrderFails) {
+    auto* o = svc->placeOrder(1, "Lab-A", 5);
+    svc->approveOrder(o->getId());  // now PRODUCING
+    EXPECT_FALSE(svc->rejectOrder(o->getId()));
+}
+
+TEST_F(OrderServiceTest, ApproveNonExistentOrderFails) {
+    EXPECT_FALSE(svc->approveOrder(999));
+}
+
+TEST_F(OrderServiceTest, RejectNonExistentOrderFails) {
+    EXPECT_FALSE(svc->rejectOrder(999));
+}
+
+TEST_F(OrderServiceTest, GetReservedOrders_ReturnsOnlyReserved) {
+    auto* o1 = svc->placeOrder(1, "Lab-A", 3);
+    auto* o2 = svc->placeOrder(1, "Lab-B", 2);
+    svc->approveOrder(o1->getId());  // becomes PRODUCING (no stock)
+
+    auto reserved = svc->getReservedOrders();
+    ASSERT_EQ(reserved.size(), 1u);
+    EXPECT_EQ(reserved[0]->getId(), o2->getId());
+}
+
+TEST_F(OrderServiceTest, GetAllOrders_IncludesAllStatuses) {
+    auto* o1 = svc->placeOrder(1, "Lab-A", 3);
+    auto* o2 = svc->placeOrder(1, "Lab-B", 2);
+    svc->rejectOrder(o2->getId());
+    EXPECT_EQ(svc->getAllOrders().size(), 2u);
+}

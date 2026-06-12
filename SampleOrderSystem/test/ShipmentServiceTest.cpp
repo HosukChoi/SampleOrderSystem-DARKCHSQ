@@ -57,3 +57,32 @@ TEST_F(ShipmentServiceTest, GetConfirmedOrdersReturnsOnlyConfirmed) {
     ASSERT_EQ(confirmed.size(), 1u);
     EXPECT_EQ(confirmed[0]->getId(), 1);
 }
+
+TEST_F(ShipmentServiceTest, ReleaseNonExistentOrderFails) {
+    EXPECT_FALSE(svc->release(999));
+}
+
+TEST_F(ShipmentServiceTest, ReleaseAlreadyReleasedOrderFails) {
+    Order o(1, 1, "Lab-A", 10); o.setStatus(OrderStatus::CONFIRMED);
+    order_repo->save(o);
+    EXPECT_TRUE(svc->release(1));
+    EXPECT_FALSE(svc->release(1));
+}
+
+TEST_F(ShipmentServiceTest, ReleaseReservedOrderFails) {
+    Order o(1, 1, "Lab-A", 10);  // RESERVED
+    order_repo->save(o);
+    EXPECT_FALSE(svc->release(1));
+}
+
+TEST_F(ShipmentServiceTest, GetConfirmedOrders_WhenEmpty) {
+    EXPECT_TRUE(svc->getConfirmedOrders().empty());
+}
+
+TEST_F(ShipmentServiceTest, MultipleRelease_StockDecrementsAccumulate) {
+    Order o1(1, 1, "Lab-A", 10); o1.setStatus(OrderStatus::CONFIRMED); order_repo->save(o1);
+    Order o2(2, 1, "Lab-B", 25); o2.setStatus(OrderStatus::CONFIRMED); order_repo->save(o2);
+    svc->release(1);
+    svc->release(2);
+    EXPECT_EQ(inv->getActualStock(1), 65);  // 100 - 10 - 25
+}

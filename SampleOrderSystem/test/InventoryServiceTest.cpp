@@ -83,3 +83,38 @@ TEST_F(InventoryServiceTest, PersistenceRoundTrip) {
     InventoryService inv2(order2, inv_file);
     EXPECT_EQ(inv2.getActualStock(1), 77);
 }
+
+TEST_F(InventoryServiceTest, StockStatusBoundary_AvailableExactlyZero) {
+    // actual=10, required=10 → available=0 → 부족
+    inv->addActualStock(1, 10);
+    Order o(1, 1, "Lab-A", 10); o.setStatus(OrderStatus::CONFIRMED);
+    order_repo->save(o);
+    EXPECT_EQ(inv->getAvailableStock(1), 0);
+    EXPECT_STREQ(inv->getStockStatus(1), "부족");
+}
+
+TEST_F(InventoryServiceTest, AvailableStockNegativeWhenOverCommitted) {
+    // actual=5, required=10 → available=-5
+    inv->addActualStock(1, 5);
+    Order o(1, 1, "Lab-A", 10); o.setStatus(OrderStatus::CONFIRMED);
+    order_repo->save(o);
+    EXPECT_EQ(inv->getAvailableStock(1), -5);
+    EXPECT_STREQ(inv->getStockStatus(1), "부족");
+}
+
+TEST_F(InventoryServiceTest, RequiredStockExcludesRELEASEAndREJECTED) {
+    Order o1(1, 1, "Lab-A", 20); o1.setStatus(OrderStatus::RELEASE);   order_repo->save(o1);
+    Order o2(2, 1, "Lab-B", 15); o2.setStatus(OrderStatus::REJECTED);  order_repo->save(o2);
+    Order o3(3, 1, "Lab-C", 10); o3.setStatus(OrderStatus::CONFIRMED); order_repo->save(o3);
+    EXPECT_EQ(inv->getRequiredStock(1), 10);
+}
+
+TEST_F(InventoryServiceTest, MultipleSampleIdsIndependent) {
+    inv->addActualStock(1, 50);
+    inv->addActualStock(2, 30);
+    EXPECT_EQ(inv->getActualStock(1), 50);
+    EXPECT_EQ(inv->getActualStock(2), 30);
+    inv->subtractActualStock(1, 10);
+    EXPECT_EQ(inv->getActualStock(1), 40);
+    EXPECT_EQ(inv->getActualStock(2), 30);
+}
