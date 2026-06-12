@@ -12,7 +12,27 @@ void ProductionLine::enqueue(int order_id, int sample_id,
     else waiting_queue_.push(job);
 }
 
-void ProductionLine::tick() {}  // Task 8에서 구현
+void ProductionLine::tick() {
+    if (!current_job_) return;
+
+    int newly = current_job_->calcNewlyProduced();
+
+    if (newly > 0) {
+        current_job_->addProduced(newly);
+        inventory_.addActualStock(current_job_->getSampleId(), newly);
+    }
+
+    if (current_job_->isComplete()) {
+        Order* order = order_repo_.findById(current_job_->getOrderId());
+        if (order) {
+            order->setStatus(OrderStatus::CONFIRMED);
+            order_repo_.save(*order);
+        }
+        current_job_.reset();
+        startNextJob();
+    }
+}
+
 bool ProductionLine::isProducing() const { return current_job_ != nullptr; }
 const ProductionJob* ProductionLine::getCurrentJob() const { return current_job_.get(); }
 int ProductionLine::getQueueSize() const { return static_cast<int>(waiting_queue_.size()); }
@@ -21,6 +41,7 @@ std::queue<ProductionJob> ProductionLine::getWaitingQueue() const { return waiti
 void ProductionLine::startNextJob() {
     if (!waiting_queue_.empty()) {
         current_job_ = std::make_unique<ProductionJob>(waiting_queue_.front());
+        current_job_->resetLastTick();
         waiting_queue_.pop();
     }
 }

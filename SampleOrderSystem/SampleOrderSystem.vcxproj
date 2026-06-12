@@ -175,6 +175,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="test\InventoryServiceTest.cpp" />
     <ClCompile Include="test\OrderServiceTest.cpp" />
+    <ClCompile Include="test\ProductionLineTest.cpp" />
     <ClCompile Include="test\SampleServiceTest.cpp" />
     <ClCompile Include="test\JsonOrderRepositoryTest.cpp" />
     <ClCompile Include="test\JsonSampleRepositoryTest.cpp" />
