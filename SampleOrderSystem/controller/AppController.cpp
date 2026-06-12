@@ -6,7 +6,7 @@ AppController::AppController()
       order_repo_("data/orders.json"),
       inventory_(order_repo_, "data/inventory.json"),
       sample_svc_(sample_repo_),
-      production_line_(inventory_, order_repo_, clock_),
+      production_line_(inventory_, order_repo_, clock_, "data/production_queue.json"),
       order_svc_(order_repo_, sample_repo_, inventory_, production_line_),
       shipment_svc_(order_repo_, inventory_),
       main_view_(sample_svc_, order_svc_, inventory_, production_line_, shipment_svc_) {}

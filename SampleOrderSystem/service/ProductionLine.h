@@ -2,6 +2,7 @@
 #pragma once
 #include <queue>
 #include <memory>
+#include <string>
 #include "domain/ProductionJob.h"
 #include "service/InventoryService.h"
 #include "interface/IOrderRepository.h"
@@ -10,7 +11,7 @@
 class ProductionLine {
 public:
     ProductionLine(InventoryService& inventory, IOrderRepository& order_repo,
-                   IClockProvider& clock);
+                   IClockProvider& clock, const std::string& file_path = "");
 
     void enqueue(int order_id, int sample_id, int actual_qty, double avg_production_time);
     void tick();
@@ -25,6 +26,9 @@ private:
     IClockProvider&                clock_;
     std::unique_ptr<ProductionJob> current_job_;
     std::queue<ProductionJob>      waiting_queue_;
+    std::string                    file_path_;
 
     void startNextJob();
+    void load();
+    void persist() const;
 };

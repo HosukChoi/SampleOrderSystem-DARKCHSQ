@@ -12,6 +12,7 @@ public:
     int getSampleId() const;
     int getActualQty() const;
     int getProducedQty() const;
+    double getAvgProductionTime() const;
     void addProduced(int qty);
     bool isComplete() const;
     int calcNewlyProduced();

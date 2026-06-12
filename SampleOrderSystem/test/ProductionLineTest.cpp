@@ -88,6 +88,23 @@ TEST_F(ProductionLineTest, ProductionCompleteChangesOrderToConfirmed) {
     EXPECT_FALSE(prod->isProducing());
 }
 
+TEST_F(ProductionLineTest, QueuePersistsAcrossRestart) {
+    const std::string queue_file = "test_pl_queue_tmp.json";
+    EXPECT_CALL(mock_clock, now()).WillRepeatedly(Return(t0));
+    {
+        ProductionLine pl(*inv, *order_repo, mock_clock, queue_file);
+        pl.enqueue(1, 1, 3, 1.0);
+        pl.enqueue(2, 1, 2, 1.0);
+        EXPECT_TRUE(pl.isProducing());
+        EXPECT_EQ(pl.getQueueSize(), 1);
+    }
+    ProductionLine pl2(*inv, *order_repo, mock_clock, queue_file);
+    EXPECT_TRUE(pl2.isProducing());
+    EXPECT_EQ(pl2.getCurrentJob()->getOrderId(), 1);
+    EXPECT_EQ(pl2.getQueueSize(), 1);
+    fs::remove(queue_file);
+}
+
 TEST_F(ProductionLineTest, NextJobStartsAfterCurrentCompletes) {
     Order o1(1, 1, "Lab-A", 1); o1.setStatus(OrderStatus::PRODUCING); order_repo->save(o1);
     Order o2(2, 1, "Lab-B", 1); o2.setStatus(OrderStatus::PRODUCING); order_repo->save(o2);

@@ -13,6 +13,7 @@ int ProductionJob::getOrderId() const { return order_id_; }
 int ProductionJob::getSampleId() const { return sample_id_; }
 int ProductionJob::getActualQty() const { return actual_qty_; }
 int ProductionJob::getProducedQty() const { return produced_qty_; }
+double ProductionJob::getAvgProductionTime() const { return avg_production_time_; }
 void ProductionJob::addProduced(int qty) { produced_qty_ += qty; }
 bool ProductionJob::isComplete() const { return produced_qty_ >= actual_qty_; }
 
