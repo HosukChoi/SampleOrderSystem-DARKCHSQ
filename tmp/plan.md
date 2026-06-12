@@ -461,7 +461,8 @@ interface IOrderRepository : public IComponent {
 **Files:**
 - Create: `SampleOrderSystem/repository/JsonSampleRepository.h / .cpp`
 - Create: `SampleOrderSystem/repository/JsonOrderRepository.h / .cpp`
-- *(테스트는 SampleService/OrderService Task에서 실제 구현체 사용)*
+- Create: `SampleOrderSystem/test/JsonSampleRepositoryTest.cpp`
+- Create: `SampleOrderSystem/test/JsonOrderRepositoryTest.cpp`
 
 **저장 파일 및 구조:**
 
@@ -528,7 +529,8 @@ void JsonSampleRepository::load() {
 }
 
 void JsonSampleRepository::persist() const {
-    fs::create_directories(fs::path(file_path_).parent_path());
+    auto parent = fs::path(file_path_).parent_path();
+    if (!parent.empty()) fs::create_directories(parent);
     json j = json::array();
     for (auto& [id, s] : store_)
         j.push_back({{"id", s.getId()},
@@ -636,7 +638,8 @@ void JsonOrderRepository::load() {
 }
 
 void JsonOrderRepository::persist() const {
-    fs::create_directories(fs::path(file_path_).parent_path());
+    auto parent = fs::path(file_path_).parent_path();
+    if (!parent.empty()) fs::create_directories(parent);
     json j = json::array();
     for (auto& [id, o] : store_)
         j.push_back({{"id",            o.getId()},
@@ -675,12 +678,119 @@ std::vector<Order*> JsonOrderRepository::findByStatus(OrderStatus status) {
 int JsonOrderRepository::nextId() { return next_id_++; }
 ```
 
-- [ ] 빌드 확인 (기존 테스트 전체 PASSED)
+- [ ] `test/JsonSampleRepositoryTest.cpp` 생성 후 vcxproj에 추가
+
+```cpp
+// test/JsonSampleRepositoryTest.cpp
+#include <gtest/gtest.h>
+#include "repository/JsonSampleRepository.h"
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
+class JsonSampleRepositoryTest : public ::testing::Test {
+protected:
+    const std::string file = "test_samples_tmp.json";
+    JsonSampleRepository* repo;
+
+    void SetUp() override { repo = new JsonSampleRepository(file); }
+    void TearDown() override { delete repo; fs::remove(file); }
+};
+
+TEST_F(JsonSampleRepositoryTest, FindByIdReturnsNullWhenEmpty) {
+    EXPECT_EQ(repo->findById(1), nullptr);
+}
+TEST_F(JsonSampleRepositoryTest, SaveAndFindById) {
+    repo->save(Sample(1, "AlphaSi", 3.0, 0.9));
+    Sample* s = repo->findById(1);
+    ASSERT_NE(s, nullptr);
+    EXPECT_EQ(s->getName(), "AlphaSi");
+}
+TEST_F(JsonSampleRepositoryTest, FindAllReturnsAllSaved) {
+    repo->save(Sample(1, "AlphaSi", 3.0, 0.9));
+    repo->save(Sample(2, "BetaSi",  5.0, 0.85));
+    EXPECT_EQ(repo->findAll().size(), 2u);
+}
+TEST_F(JsonSampleRepositoryTest, FindByNameKeywordMatch) {
+    repo->save(Sample(1, "AlphaSi", 3.0, 0.9));
+    repo->save(Sample(2, "BetaSi",  5.0, 0.85));
+    auto partial = repo->findByName("Alpha");
+    ASSERT_EQ(partial.size(), 1u);
+    EXPECT_EQ(partial[0]->getName(), "AlphaSi");
+}
+TEST_F(JsonSampleRepositoryTest, PersistAndReloadRoundTrip) {
+    repo->save(Sample(1, "AlphaSi", 3.0, 0.9));
+    delete repo;
+    repo = new JsonSampleRepository(file);
+    ASSERT_NE(repo->findById(1), nullptr);
+    EXPECT_EQ(repo->findById(1)->getName(), "AlphaSi");
+}
+```
+
+- [ ] `test/JsonOrderRepositoryTest.cpp` 생성 후 vcxproj에 추가
+
+```cpp
+// test/JsonOrderRepositoryTest.cpp
+#include <gtest/gtest.h>
+#include "repository/JsonOrderRepository.h"
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
+class JsonOrderRepositoryTest : public ::testing::Test {
+protected:
+    const std::string file = "test_orders_tmp.json";
+    JsonOrderRepository* repo;
+
+    void SetUp() override { repo = new JsonOrderRepository(file); }
+    void TearDown() override { delete repo; fs::remove(file); }
+};
+
+TEST_F(JsonOrderRepositoryTest, FindByIdReturnsNullWhenEmpty) {
+    EXPECT_EQ(repo->findById(1), nullptr);
+}
+TEST_F(JsonOrderRepositoryTest, SaveAndFindById) {
+    repo->save(Order(1, 10, "Lab-A", 5));
+    Order* o = repo->findById(1);
+    ASSERT_NE(o, nullptr);
+    EXPECT_EQ(o->getCustomerName(), "Lab-A");
+    EXPECT_EQ(o->getStatus(), OrderStatus::RESERVED);
+}
+TEST_F(JsonOrderRepositoryTest, FindAllReturnsAllSaved) {
+    repo->save(Order(1, 10, "Lab-A", 5));
+    repo->save(Order(2, 20, "Lab-B", 3));
+    EXPECT_EQ(repo->findAll().size(), 2u);
+}
+TEST_F(JsonOrderRepositoryTest, FindByStatusFiltersCorrectly) {
+    Order o1(1, 10, "Lab-A", 5); o1.setStatus(OrderStatus::CONFIRMED);
+    Order o2(2, 10, "Lab-B", 3); o2.setStatus(OrderStatus::PRODUCING);
+    Order o3(3, 10, "Lab-C", 2);
+    repo->save(o1); repo->save(o2); repo->save(o3);
+    EXPECT_EQ(repo->findByStatus(OrderStatus::CONFIRMED).size(), 1u);
+    EXPECT_EQ(repo->findByStatus(OrderStatus::RESERVED).size(),  1u);
+}
+TEST_F(JsonOrderRepositoryTest, NextIdIncrements) {
+    EXPECT_EQ(repo->nextId(), 1);
+    EXPECT_EQ(repo->nextId(), 2);
+}
+TEST_F(JsonOrderRepositoryTest, PersistAndReloadRoundTrip) {
+    Order o(1, 10, "Lab-A", 5); o.setStatus(OrderStatus::CONFIRMED);
+    repo->save(o);
+    delete repo;
+    repo = new JsonOrderRepository(file);
+    Order* found = repo->findById(1);
+    ASSERT_NE(found, nullptr);
+    EXPECT_EQ(found->getStatus(), OrderStatus::CONFIRMED);
+}
+```
+
+- [ ] 빌드 & 실행 → `JsonSampleRepositoryTest.*` 5개, `JsonOrderRepositoryTest.*` 6개 PASSED 확인
 
 - [ ] 커밋
 
 ```
 [feat](repository): JsonSampleRepository, JsonOrderRepository - JSON 자동 영속성 구현
+[test](repository): JsonSampleRepository, JsonOrderRepository 단위 테스트 추가
 ```
 
 ---
