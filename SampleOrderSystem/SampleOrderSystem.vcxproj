@@ -148,10 +148,13 @@
   <ItemGroup>
     <ClInclude Include="domain\Order.h" />
     <ClInclude Include="domain\OrderStatus.h" />
+    <ClInclude Include="domain\ProductionJob.h" />
     <ClInclude Include="domain\Sample.h" />
+    <ClInclude Include="interface\IClockProvider.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="domain\Order.cpp" />
+    <ClCompile Include="domain\ProductionJob.cpp" />
     <ClCompile Include="domain\Sample.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="test\SampleTest.cpp" />
