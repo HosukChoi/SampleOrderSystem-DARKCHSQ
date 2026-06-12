@@ -14,7 +14,7 @@ void ProductionView::run() {
     if (production_line_.isProducing()) {
         auto* job = production_line_.getCurrentJob();
         std::cout << "[현재 생산 중]\n";
-        printf("  주문 ID:%d | 시료 ID:%d | 생산량:%d / %d\n\n",
+        printf("  주문 ID:%d | 시료 ID:%d | 생산량:%dea / %dea\n\n",
                job->getOrderId(), job->getSampleId(),
                job->getProducedQty(), job->getActualQty());
     } else {
@@ -25,7 +25,7 @@ void ProductionView::run() {
     int pos = 1;
     while (!q.empty()) {
         auto job = q.front(); q.pop();
-        printf("  %d. 주문ID:%d | 시료ID:%d | 예정:%d개\n",
+        printf("  %d. 주문ID:%d | 시료ID:%d | 예정:%dea\n",
                pos++, job.getOrderId(), job.getSampleId(), job.getActualQty());
     }
     ConsoleUtils::pause();

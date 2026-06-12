@@ -42,13 +42,13 @@ void SampleView::listSamples() {
         printf("%-4s %-16s %-12s %-8s %-10s %s\n", "ID", "이름", "평균생산시간", "수율", "현재 재고", "상태");
         ConsoleUtils::printSeparator();
         for (auto* s : samples) {
-            char yield_str[16];
+            char yield_str[16], stock_str[16];
             snprintf(yield_str, sizeof(yield_str), "%.0f%%", s->getYield() * 100);
-            printf("%-4d %-16s %-12.1f %-8s %-10d %s\n",
+            snprintf(stock_str, sizeof(stock_str), "%dea", inventory_.getActualStock(s->getId()));
+            printf("%-4d %-16s %-12.1f %-8s %-10s %s\n",
                    s->getId(), s->getName().c_str(),
                    s->getAvgProductionTime(), yield_str,
-                   inventory_.getActualStock(s->getId()),
-                   inventory_.getStockStatus(s->getId()));
+                   stock_str, inventory_.getStockStatus(s->getId()));
         }
     }
     ConsoleUtils::pause();

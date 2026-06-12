@@ -82,9 +82,13 @@ void MonitoringView::showProductionQueue() {
         char time_str[9];
         strftime(time_str, sizeof(time_str), "%H:%M:%S", &tm_buf);
 
-        printf("%-4d %-8d %-16s %-8d %-8d %-8d %s\n",
+        char qty_str[12], short_str[12], actual_str[12];
+        snprintf(qty_str,    sizeof(qty_str),    "%dea", order_qty);
+        snprintf(short_str,  sizeof(short_str),  "%dea", job.getShortfall());
+        snprintf(actual_str, sizeof(actual_str), "%dea", job.getActualQty());
+        printf("%-4d %-8d %-16s %-8s %-8s %-8s %s\n",
                seq, job.getOrderId(), sample_name.c_str(),
-               order_qty, job.getShortfall(), job.getActualQty(), time_str);
+               qty_str, short_str, actual_str, time_str);
     };
 
     const ProductionJob* cur = production_line_.getCurrentJob();
@@ -111,11 +115,13 @@ void MonitoringView::showInventoryStatus() {
     printf("%-4s %-16s %-9s %-9s %-9s %s\n", "ID", "이름", "실재재고", "필요재고", "가용재고", "상태");
     ConsoleUtils::printSeparator();
     for (auto* s : sample_svc_.getAllSamples()) {
-        printf("%-4d %-16s %-9d %-9d %-9d %s\n",
+        char actual_str[12], req_str[12], avail_str[12];
+        snprintf(actual_str, sizeof(actual_str), "%dea", inventory_.getActualStock(s->getId()));
+        snprintf(req_str,    sizeof(req_str),    "%dea", inventory_.getRequiredStock(s->getId()));
+        snprintf(avail_str,  sizeof(avail_str),  "%dea", inventory_.getAvailableStock(s->getId()));
+        printf("%-4d %-16s %-9s %-9s %-9s %s\n",
                s->getId(), s->getName().c_str(),
-               inventory_.getActualStock(s->getId()),
-               inventory_.getRequiredStock(s->getId()),
-               inventory_.getAvailableStock(s->getId()),
+               actual_str, req_str, avail_str,
                inventory_.getStockStatus(s->getId()));
     }
     ConsoleUtils::pause();

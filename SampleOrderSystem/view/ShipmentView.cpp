@@ -21,7 +21,7 @@ void ShipmentView::run() {
     for (auto* o : confirmed) {
         auto* s = sample_svc_.findById(o->getSampleId());
         std::string sample_name = s ? s->getName() : "?";
-        printf("%-4d %-8d %-16s %-16s %d\n",
+        printf("%-4d %-8d %-16s %-16s %dea\n",
                no++, o->getId(), o->getCustomerName().c_str(),
                sample_name.c_str(), o->getQuantity());
     }

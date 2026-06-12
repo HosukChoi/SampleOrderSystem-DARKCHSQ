@@ -37,7 +37,7 @@ void OrderView::processApproval() {
     printf("%-4s %-16s %-7s %s\n", "ID", "고객명", "시료ID", "수량");
     ConsoleUtils::printSeparator();
     for (auto* o : reserved)
-        printf("%-4d %-16s %-7d %d\n", o->getId(), o->getCustomerName().c_str(),
+        printf("%-4d %-16s %-7d %dea\n", o->getId(), o->getCustomerName().c_str(),
                o->getSampleId(), o->getQuantity());
     int order_id = ConsoleUtils::readInt("\n주문 ID: ");
     std::cout << "1. 승인  2. 거절  0. 취소\n";
