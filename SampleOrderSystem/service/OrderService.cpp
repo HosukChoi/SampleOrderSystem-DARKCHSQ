@@ -29,7 +29,7 @@ bool OrderService::approveOrder(int order_id) {
         int actual_qty = static_cast<int>(
             std::ceil(shortfall / (sample->getYield() * 0.9)));
         production_line_.enqueue(order_id, order->getSampleId(),
-                                 actual_qty, sample->getAvgProductionTime());
+                                 actual_qty, sample->getAvgProductionTime(), shortfall);
     }
     order_repo_.save(*order);
     return true;

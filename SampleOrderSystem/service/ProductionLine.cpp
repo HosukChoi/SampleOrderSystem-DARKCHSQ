@@ -25,7 +25,8 @@ void ProductionLine::load() {
                           jj["sample_id"].get<int>(),
                           jj["actual_qty"].get<int>(),
                           jj["avg_production_time"].get<double>(),
-                          clock_);
+                          clock_,
+                          jj.value("shortfall", 0));
         job.addProduced(jj["produced_qty"].get<int>());
         job.resetLastTick();
         return job;
@@ -49,6 +50,7 @@ void ProductionLine::persist() const {
                     {"sample_id",           job.getSampleId()},
                     {"actual_qty",          job.getActualQty()},
                     {"produced_qty",        job.getProducedQty()},
+                    {"shortfall",           job.getShortfall()},
                     {"avg_production_time", job.getAvgProductionTime()}};
     };
 
@@ -62,8 +64,8 @@ void ProductionLine::persist() const {
 }
 
 void ProductionLine::enqueue(int order_id, int sample_id,
-                              int actual_qty, double avg_production_time) {
-    ProductionJob job(order_id, sample_id, actual_qty, avg_production_time, clock_);
+                              int actual_qty, double avg_production_time, int shortfall) {
+    ProductionJob job(order_id, sample_id, actual_qty, avg_production_time, clock_, shortfall);
     if (!current_job_) current_job_ = std::make_unique<ProductionJob>(job);
     else waiting_queue_.push(job);
     persist();

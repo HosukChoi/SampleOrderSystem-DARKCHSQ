@@ -14,6 +14,7 @@ public:
 private:
     void showOrderStatus();
     void showInventoryStatus();
+    void showProductionQueue();
     OrderService& order_svc_;
     SampleService& sample_svc_;
     InventoryService& inventory_;

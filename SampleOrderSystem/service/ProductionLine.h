@@ -13,7 +13,8 @@ public:
     ProductionLine(InventoryService& inventory, IOrderRepository& order_repo,
                    IClockProvider& clock, const std::string& file_path = "");
 
-    void enqueue(int order_id, int sample_id, int actual_qty, double avg_production_time);
+    void enqueue(int order_id, int sample_id, int actual_qty, double avg_production_time,
+                 int shortfall = 0);
     void tick();
     bool isProducing() const;
     const ProductionJob* getCurrentJob() const;
